@@ -1,12 +1,12 @@
 {
   "name": "awesome-dsh-plugin",
   "user": "ubuntu",
-  "install": "npm ci",
+  "install": "cd /agent/repos/awesome-dsh-plugin && npm ci",
   "terminals": [
     {
       "name": "site",
-      "description": "Regenerate the static site from data/plugins/*.yml and serve docs/ at http://localhost:8080. Rebuild manually with `node scripts/generate-readme.mjs && SKIP_PUBLISH_CHECKS=1 node scripts/build-site.mjs`.",
-      "command": "SKIP_PUBLISH_CHECKS=1 node scripts/build-site.mjs && python3 -m http.server 8080 --directory docs"
+      "description": "Regenerate the static site from data/plugins/*.yml and serve docs/ at http://localhost:8080. Rebuild manually from the repo with `node scripts/generate-readme.mjs && SKIP_PUBLISH_CHECKS=1 node scripts/build-site.mjs`.",
+      "command": "cd /agent/repos/awesome-dsh-plugin && SKIP_PUBLISH_CHECKS=1 node scripts/build-site.mjs && python3 -m http.server 8080 --directory docs"
     }
   ],
   "ports": [
