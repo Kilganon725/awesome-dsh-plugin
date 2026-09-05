@@ -18,7 +18,7 @@ export class StudioViewer {
     const width = host.clientWidth || 800;
     const height = host.clientHeight || 560;
     this.camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 40);
-    this.camera.position.set(1.8, 1.55, 4.6);
+    this.camera.position.set(2.2, 1.7, 5.4);
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -27,7 +27,9 @@ export class StudioViewer {
     });
     this.renderer.setClearColor(0x000000, 0);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    this.renderer.setSize(width, height);
+    this.renderer.setSize(width, height, false);
+    this.renderer.domElement.style.width = "100%";
+    this.renderer.domElement.style.height = "100%";
     this.renderer.shadowMap.enabled = true;
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -52,7 +54,7 @@ export class StudioViewer {
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.08;
     this.controls.enablePan = false;
-    this.controls.minDistance = 3.6;
+    this.controls.minDistance = 4.2;
     this.controls.maxDistance = 9;
     this.controls.minPolarAngle = 0.75;
     this.controls.maxPolarAngle = 1.4;
@@ -95,6 +97,8 @@ export class StudioViewer {
     this.boundResize = this.#resize.bind(this);
     this.boundKey = this.#onKey.bind(this);
     window.addEventListener("resize", this.boundResize);
+    this.ro = new ResizeObserver(() => this.#resize());
+    this.ro.observe(host);
     this.renderer.domElement.addEventListener("keydown", this.boundKey);
     document.addEventListener("visibilitychange", this.#onVisibility);
     this.raf = requestAnimationFrame(this.boundLoop);
@@ -146,7 +150,9 @@ export class StudioViewer {
     if (!width || !height) return;
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(width, height);
+    this.renderer.setSize(width, height, false);
+    this.renderer.domElement.style.width = "100%";
+    this.renderer.domElement.style.height = "100%";
   }
 
   #onKey(event) {
@@ -195,7 +201,7 @@ export class StudioViewer {
   }
 
   resetView() {
-    this.camera.position.set(1.8, 1.55, 4.6);
+    this.camera.position.set(2.2, 1.7, 5.4);
     this.controls.target.set(0, 0.42, 0);
     this.controls.update();
   }
@@ -240,6 +246,7 @@ export class StudioViewer {
   dispose() {
     cancelAnimationFrame(this.raf);
     window.removeEventListener("resize", this.boundResize);
+    this.ro?.disconnect();
     this.renderer.domElement.removeEventListener("keydown", this.boundKey);
     document.removeEventListener("visibilitychange", this.#onVisibility);
     if (this.shoe) disposeObject(this.shoe);
