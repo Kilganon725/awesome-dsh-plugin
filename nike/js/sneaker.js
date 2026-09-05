@@ -293,19 +293,9 @@ export function buildSneaker(shoe, colorway) {
     inner.add(wing, wing2);
   }
 
-  inner.updateWorldMatrix(true, true);
-  const box = new THREE.Box3().setFromObject(inner);
-  const size = new THREE.Vector3();
-  box.getSize(size);
-  const maxDim = Math.max(size.x, size.y, size.z) || 1;
-  inner.scale.setScalar(1.65 / maxDim);
-  inner.updateWorldMatrix(true, true);
-  const fitted = new THREE.Box3().setFromObject(inner);
-  const center = new THREE.Vector3();
-  fitted.getCenter(center);
-  inner.position.set(-center.x, -fitted.min.y, -center.z);
-
-  group.rotation.set(-0.18, 0.62, 0.06);
+  inner.scale.setScalar(0.72);
+  inner.position.set(0.04, 0.02, 0);
+  group.rotation.set(-0.28, 0.18, 0.02);
   group.userData.floatY = 0;
   return group;
 }

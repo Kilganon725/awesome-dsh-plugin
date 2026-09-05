@@ -18,7 +18,7 @@ export class StudioViewer {
     const width = host.clientWidth || 800;
     const height = host.clientHeight || 560;
     this.camera = new THREE.PerspectiveCamera(42, width / height, 0.1, 40);
-    this.camera.position.set(2.2, 1.7, 5.4);
+    this.camera.position.set(0.4, 1.25, 6.2);
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -58,7 +58,7 @@ export class StudioViewer {
     this.controls.maxDistance = 9;
     this.controls.minPolarAngle = 0.75;
     this.controls.maxPolarAngle = 1.4;
-    this.controls.target.set(0, 0.42, 0);
+    this.controls.target.set(0, 0.48, 0);
     this.controls.autoRotate = false;
     this.controls.touches = {
       ONE: THREE.TOUCH.ROTATE,
@@ -201,8 +201,8 @@ export class StudioViewer {
   }
 
   resetView() {
-    this.camera.position.set(2.2, 1.7, 5.4);
-    this.controls.target.set(0, 0.42, 0);
+    this.camera.position.set(0.4, 1.25, 6.2);
+    this.controls.target.set(0, 0.48, 0);
     this.controls.update();
   }
 
