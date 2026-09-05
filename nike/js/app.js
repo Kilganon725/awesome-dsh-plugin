@@ -161,13 +161,15 @@ function bindControls(viewer) {
 
   $("#menu-toggle").addEventListener("click", () => {
     const nav = $("#mobile-nav");
-    const open = nav.hasAttribute("hidden");
+    const open = !nav.classList.contains("is-open");
+    nav.classList.toggle("is-open", open);
     nav.toggleAttribute("hidden", !open);
     $("#menu-toggle").setAttribute("aria-expanded", String(open));
   });
 
   $$("#mobile-nav a").forEach((link) => {
     link.addEventListener("click", () => {
+      $("#mobile-nav").classList.remove("is-open");
       $("#mobile-nav").hidden = true;
       $("#menu-toggle").setAttribute("aria-expanded", "false");
     });
@@ -196,8 +198,7 @@ function bindControls(viewer) {
 
 function restoreTheme() {
   const saved = localStorage.getItem("nike-studio-theme");
-  const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
-  const theme = saved || (prefersLight ? "light" : "dark");
+  const theme = saved || "dark";
   document.documentElement.dataset.theme = theme;
   $("#theme-toggle").setAttribute("aria-pressed", String(theme === "light"));
 }
@@ -223,8 +224,11 @@ function start() {
   bindControls(viewer);
   bindMagnetic($("[data-magnetic]"));
 
+  requestAnimationFrame(() => viewer.resize());
+
   if (!motion.reduced) {
     motion.playIntro();
+    window.setTimeout(() => viewer.resize(), 1200);
   } else {
     const intro = $("[data-intro]");
     if (intro) intro.hidden = true;

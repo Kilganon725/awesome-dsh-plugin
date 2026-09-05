@@ -17,8 +17,8 @@ export class StudioViewer {
 
     const width = host.clientWidth || 800;
     const height = host.clientHeight || 560;
-    this.camera = new THREE.PerspectiveCamera(32, width / height, 0.1, 40);
-    this.camera.position.set(3.4, 1.8, 3.6);
+    this.camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 40);
+    this.camera.position.set(2.6, 1.45, 3.55);
 
     this.renderer = new THREE.WebGLRenderer({
       antialias: true,
@@ -52,11 +52,11 @@ export class StudioViewer {
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.08;
     this.controls.enablePan = false;
-    this.controls.minDistance = 2.4;
-    this.controls.maxDistance = 7.2;
-    this.controls.minPolarAngle = 0.55;
-    this.controls.maxPolarAngle = 1.45;
-    this.controls.target.set(0, 0.55, 0);
+    this.controls.minDistance = 3.1;
+    this.controls.maxDistance = 8.4;
+    this.controls.minPolarAngle = 0.7;
+    this.controls.maxPolarAngle = 1.42;
+    this.controls.target.set(0, 0.38, 0);
     this.controls.autoRotate = false;
     this.controls.touches = {
       ONE: THREE.TOUCH.ROTATE,
@@ -136,6 +136,10 @@ export class StudioViewer {
     this.scene.add(spot, spot.target);
   }
 
+  resize() {
+    this.#resize();
+  }
+
   #resize() {
     const width = this.host.clientWidth;
     const height = this.host.clientHeight;
@@ -191,8 +195,8 @@ export class StudioViewer {
   }
 
   resetView() {
-    this.camera.position.set(3.4, 1.8, 3.6);
-    this.controls.target.set(0, 0.55, 0);
+    this.camera.position.set(2.6, 1.45, 3.55);
+    this.controls.target.set(0, 0.38, 0);
     this.controls.update();
   }
 

@@ -107,7 +107,7 @@ function addLaces(group, palette, count, startX, y, width) {
 
 function addWaffle(group, palette, y) {
   const nub = rubber(palette.outsole, { roughness: 0.9 });
-  for (let ix = -5; ix <= 6; ix += 1) {
+  for (let ix = -4; ix <= 5; ix += 1) {
     for (let iz = -2; iz <= 2; iz += 1) {
       const geo = new THREE.BoxGeometry(0.1, 0.035, 0.1);
       group.add(mesh(geo, nub, {
@@ -297,15 +297,24 @@ export function buildSneaker(shoe, colorway) {
     }
   });
 
+  group.rotation.y = 0.72;
+  group.rotation.x = -0.12;
+  group.rotation.z = 0.04;
+  group.updateWorldMatrix(true, true);
   const box = new THREE.Box3().setFromObject(group);
   const size = new THREE.Vector3();
   box.getSize(size);
+  const maxDim = Math.max(size.x, size.y, size.z) || 1;
+  group.scale.setScalar(2.05 / maxDim);
+  group.updateWorldMatrix(true, true);
+  const fitted = new THREE.Box3().setFromObject(group);
   const center = new THREE.Vector3();
-  box.getCenter(center);
-  group.position.sub(center);
-  group.position.y += size.y / 2;
-  group.rotation.y = 0.55;
-  group.rotation.x = 0.08;
+  fitted.getCenter(center);
+  group.position.set(
+    group.position.x - center.x,
+    group.position.y - fitted.min.y + 0.02,
+    group.position.z - center.z,
+  );
   group.userData.floatY = group.position.y;
   return group;
 }

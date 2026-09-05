@@ -115,13 +115,13 @@ export function initMotion() {
         scrollTrigger: {
           trigger: story,
           start: "top top",
-          end: "+=120%",
+          end: "+=90%",
           scrub: 1,
           pin: true,
         },
       })
-        .from("[data-story-line]", { opacity: 0, y: 40, stagger: 0.15 })
-        .to("[data-story-wash]", { yPercent: -18 }, "<");
+        .from("[data-story-line]", { opacity: 0.35, y: 28, stagger: 0.12 })
+        .to("[data-story-wash]", { yPercent: -12 }, "<");
     }
 
     gsap.utils.toArray("[data-parallax]").forEach((layer, i) => {

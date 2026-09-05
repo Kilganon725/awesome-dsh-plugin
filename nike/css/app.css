@@ -79,6 +79,7 @@ html {
 }
 
 body {
+  overscroll-behavior-x: none;
   min-height: 100dvh;
   font-family: var(--font-sans);
   font-size: 1rem;
@@ -119,6 +120,10 @@ a {
 :focus-visible {
   outline: 2px solid var(--color-ring);
   outline-offset: 3px;
+}
+
+[hidden] {
+  display: none !important;
 }
 
 .sr-only {
@@ -311,11 +316,15 @@ a {
   position: sticky;
   top: calc(60px + env(safe-area-inset-top));
   z-index: 39;
-  display: grid;
+  display: none;
   gap: 0.4rem;
   padding: 0.75rem 1rem 1rem;
   background: var(--color-card);
   border-bottom: 1px solid var(--color-border);
+}
+
+.mobile-nav.is-open {
+  display: grid;
 }
 
 .mobile-nav a {
@@ -643,10 +652,15 @@ a {
   }
 
   .hero {
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.28fr);
     align-items: center;
     min-height: calc(100dvh - 72px);
     padding-top: 0.5rem;
+  }
+
+  .mobile-nav,
+  .mobile-nav.is-open {
+    display: none !important;
   }
 
   .stage {
