@@ -21,6 +21,9 @@ function splitChars(el) {
 
 export function initMotion() {
   const reduced = reduceMotion();
+  if (typeof gsap === "undefined") {
+    return { reduced: true, mm: null, playIntro: () => {}, swapShoe: instantSwap };
+  }
   gsap.registerPlugin(ScrollTrigger);
 
   const intro = document.querySelector("[data-intro]");

@@ -176,10 +176,15 @@ function bindControls(viewer) {
   $("[data-enter]")?.addEventListener("click", () => {
     const intro = $("[data-intro]");
     if (!intro || intro.hidden) return;
+    if (typeof gsap === "undefined" || motion.reduced) {
+      intro.hidden = true;
+      intro.style.pointerEvents = "none";
+      return;
+    }
     gsap.killTweensOf(intro);
     gsap.to(intro, {
       yPercent: -110,
-      duration: motion.reduced ? 0 : 0.55,
+      duration: 0.55,
       ease: "expo.inOut",
       onComplete: () => {
         intro.hidden = true;
