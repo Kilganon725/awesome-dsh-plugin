@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nike Studio · 3D 球鞋展厅</title>
+  <meta name="description" content="在线环视 Nike 经典球鞋。拖动或使用按钮 360° 查看 Air Jordan、Air Force 1、Dunk 与 Air Max。">
+  <meta name="theme-color" content="#0C0A09">
+  <meta name="color-scheme" content="dark light">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 24'%3E%3Cpath fill='%23C9A227' d='M2 18c12-2 22-10 34-12 10-2 20 1 26 4-14 1-26 6-38 10C16 22 8 21 2 18z'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/app.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">跳到主要内容</a>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="sr-only" id="live" aria-live="polite"></div>
+
+  <div class="intro" data-intro>
+    <div class="intro__inner">
+      <p class="intro__mark" data-intro-mark>Unofficial Studio</p>
+      <h1 data-split>NIKE</h1>
+      <p class="lede">360° 环绕展厅 · 挑选一双，慢慢看</p>
+      <button class="intro__btn" type="button" data-enter>进入展厅</button>
+    </div>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="#main">
+      <svg viewBox="0 0 64 24" aria-hidden="true"><path fill="currentColor" d="M2 18c12-2 22-10 34-12 10-2 20 1 26 4-14 1-26 6-38 10C16 22 8 21 2 18z"/></svg>
+      <span>STUDIO</span>
+    </a>
+    <nav class="nav-desktop" aria-label="主导航">
+      <a href="#main">展台</a>
+      <a href="#collection">系列</a>
+      <a href="#story">关于</a>
+    </nav>
+    <div class="topbar__actions">
+      <button class="icon-btn" id="theme-toggle" type="button" aria-pressed="false" aria-label="切换浅色模式">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"></path>
+        </svg>
+      </button>
+      <button class="icon-btn menu-toggle" id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="打开菜单">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+  <nav class="mobile-nav" id="mobile-nav" hidden aria-label="移动导航">
+    <a href="#main">展台</a>
+    <a href="#collection">系列</a>
+    <a href="#story">关于</a>
+  </nav>
+
+  <main id="main">
+    <section class="wrap hero" aria-labelledby="shoe-name">
+      <div class="hero__copy" data-hero-copy>
+        <p class="kicker">3D Orbit Collection</p>
+        <h2 id="shoe-name">Air Jordan 1</h2>
+        <p class="lede" id="shoe-blurb">红白黑三色奠定传奇。高帮全粒面皮革，飞人元年配色，环视可见侧翼与领口滚边。</p>
+        <div class="meta-row">
+          <span class="chip" id="shoe-colorway">Chicago</span>
+          <span class="chip" id="shoe-category">篮球</span>
+          <span class="chip" id="shoe-year">1985</span>
+          <span class="chip price" id="shoe-price">¥1,399</span>
+        </div>
+        <ul class="facts" id="shoe-facts"></ul>
+        <div>
+          <p class="kicker" style="margin-bottom:.55rem">配色</p>
+          <div class="colorways" id="colorways"></div>
+        </div>
+        <div class="controls" aria-label="切换球鞋">
+          <button class="btn btn--ghost" id="btn-prev" type="button">上一双</button>
+          <button class="btn" id="btn-next" type="button" data-magnetic>下一双</button>
+          <button class="btn btn--ghost" id="btn-spin" type="button" aria-pressed="true"><span data-spin-label>暂停旋转</span></button>
+        </div>
+        <div class="orbit" aria-label="环视控制">
+          <button class="icon-btn" id="btn-left" type="button" aria-label="向左旋转">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>
+          </button>
+          <button class="icon-btn" id="btn-right" type="button" aria-label="向右旋转">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+          </button>
+          <button class="icon-btn" id="btn-up" type="button" aria-label="向上俯视">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 15l6-6 6 6"></path></svg>
+          </button>
+          <button class="icon-btn" id="btn-down" type="button" aria-label="向下仰视">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+          </button>
+        </div>
+        <button class="btn btn--ghost" id="btn-reset" type="button">重置视角</button>
+        <p class="lede">手机滑动旋转，双指缩放；电脑拖动环视，滚轮推近。也可用方向键。</p>
+      </div>
+
+      <div class="stage-wrap" data-stage>
+        <div class="swap-flash" data-swap-flash aria-hidden="true"></div>
+        <div class="stage" id="stage"></div>
+        <p class="stage-hint">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 12h16M12 4v16"></path></svg>
+          拖动环视 · Drag to orbit
+        </p>
+      </div>
+    </section>
+    <div class="dots wrap" id="dots" aria-label="球鞋分页"></div>
+
+    <section class="wrap collection" id="collection" aria-labelledby="collection-title">
+      <div class="section-head" data-reveal>
+        <p class="kicker">Select</p>
+        <h2 class="section-title" id="collection-title">挑选一双喜欢的</h2>
+        <p class="lede">六双经典轮廓，每双最多三种配色。点选后回到展台 360° 慢慢看。</p>
+      </div>
+      <div class="collection-grid" id="collection-grid" data-reveal></div>
+    </section>
+
+    <section class="story" id="story" data-story aria-labelledby="story-title">
+      <div class="story__wash" data-story-wash data-parallax aria-hidden="true"></div>
+      <div class="story__inner wrap">
+        <p class="kicker" data-story-line>Craft</p>
+        <h2 id="story-title" data-story-line>把球鞋当作雕塑</h2>
+        <p class="lede" data-story-line>这是一间非官方的概念展厅。鞋型由实时三维搭出，灯光按摄影棚布置，动效用 GSAP 编排，让切换、入场和滚动都带着同样的节奏。</p>
+        <p class="lede" data-story-line>Nike 与对应鞋款为各自权利人所有。本页仅用于设计演示，不销售商品。</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer wrap">
+    <p>© <span id="year"></span> Nike Studio · Unofficial 3D showcase</p>
+    <p>GSAP + Three.js · 手机与电脑均可环视</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
