@@ -105,16 +105,17 @@ function renderDots() {
 }
 
 function applyModel(viewer, motion, { instant = false } = {}) {
+  renderMeta();
+  renderDots();
   const result = viewer.setModel(currentShoe(), currentColorway(), { instant });
-  if (instant) {
+  if (instant || motion.reduced) {
     result.incoming.scale.setScalar(1);
     viewer.clearPrevious(result.previous);
   } else {
     swapShoe(result, viewer, motion.reduced);
     flashAccent();
   }
-  renderMeta();
-  renderDots();
+  viewer.resetView();
 }
 
 function selectShoe(index) {
@@ -175,9 +176,13 @@ function bindControls(viewer) {
     });
   });
 
-  $("[data-enter]")?.addEventListener("click", () => {
+  const dismissIntro = () => {
     const intro = $("[data-intro]");
     if (!intro || intro.hidden) return;
+    if (typeof gsap !== "undefined") {
+      gsap.set("[data-hero-copy] > *", { autoAlpha: 1, y: 0 });
+      gsap.set("[data-stage]", { autoAlpha: 1, scale: 1 });
+    }
     if (typeof gsap === "undefined" || motion.reduced) {
       intro.hidden = true;
       intro.style.pointerEvents = "none";
@@ -188,12 +193,15 @@ function bindControls(viewer) {
       yPercent: -110,
       duration: 0.55,
       ease: "expo.inOut",
+      overwrite: true,
       onComplete: () => {
         intro.hidden = true;
         intro.style.pointerEvents = "none";
+        viewer.resize();
       },
     });
-  });
+  };
+  $("[data-enter]")?.addEventListener("click", dismissIntro);
 }
 
 function restoreTheme() {

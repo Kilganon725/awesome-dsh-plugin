@@ -143,7 +143,9 @@ export function buildSneaker(shoe, colorway) {
   const palette = colorway.palette;
   const d = silhouetteDims(shoe.silhouette);
   const group = new THREE.Group();
+  const inner = new THREE.Group();
   group.name = shoe.id;
+  group.add(inner);
 
   const upperMat = leather(palette.upper);
   const overlayMat = leather(palette.overlay, { roughness: 0.38 });
@@ -159,18 +161,18 @@ export function buildSneaker(shoe, colorway) {
     y: d.soleH / 2,
   });
   outsole.scale.set(1, 1, 1);
-  group.add(outsole);
+  inner.add(outsole);
 
   const mid = mesh(new RoundedBoxGeometry(d.length - 0.06, d.midH, d.width - 0.04, 5, 0.1), midMat, {
     y: d.soleH + d.midH / 2,
   });
-  group.add(mid);
+  inner.add(mid);
 
   if (d.thin) {
     const glue = mesh(new RoundedBoxGeometry(d.length - 0.02, 0.035, d.width + 0.02, 3, 0.04), midMat, {
       y: d.soleH + d.midH + 0.01,
     });
-    group.add(glue);
+    inner.add(glue);
   }
 
   const deckY = d.soleH + d.midH;
@@ -184,38 +186,38 @@ export function buildSneaker(shoe, colorway) {
       z: 0,
     });
     air.scale.set(airW / 0.2, airH / 0.2, (d.width - 0.18) / 0.4);
-    group.add(air);
+    inner.add(air);
     const windowFrame = mesh(
       new RoundedBoxGeometry(airW + 0.08, airH + 0.04, d.width - 0.08, 2, 0.03),
       midMat,
       { x: -0.82, y: deckY - 0.02, z: 0 },
     );
-    group.add(windowFrame);
+    inner.add(windowFrame);
   }
 
   const upper = mesh(new RoundedBoxGeometry(d.length - 0.42, d.upperH, d.width - 0.16, 4, 0.1), upperMat, {
     x: -0.02,
     y: deckY + d.upperH / 2,
   });
-  group.add(upper);
+  inner.add(upper);
 
   const toe = mesh(new RoundedBoxGeometry(0.62, d.upperH * 0.78, d.width - 0.1, 5, 0.14), toeMat, {
     x: 0.88,
     y: deckY + d.upperH * 0.38,
   });
-  group.add(toe);
+  inner.add(toe);
 
   if (shoe.silhouette === "force") {
     const punchMat = leather(palette.toe, { roughness: 0.5 });
     for (let r = 0; r < 3; r += 1) {
       for (let c = 0; c < 4; c += 1) {
-        group.add(mesh(new THREE.CircleGeometry(0.028, 12), punchMat, {
+        inner.add(mesh(new THREE.CircleGeometry(0.028, 12), punchMat, {
           x: 0.72 + c * 0.08,
           y: deckY + 0.18 + r * 0.07,
           z: 0.42,
           cast: false,
         }));
-        group.add(mesh(new THREE.CircleGeometry(0.028, 12), punchMat, {
+        inner.add(mesh(new THREE.CircleGeometry(0.028, 12), punchMat, {
           x: 0.72 + c * 0.08,
           y: deckY + 0.18 + r * 0.07,
           z: -0.42,
@@ -230,33 +232,33 @@ export function buildSneaker(shoe, colorway) {
       rx: 0,
       cast: false,
     });
-    group.add(pivot);
+    inner.add(pivot);
   }
 
   const quarter = mesh(new RoundedBoxGeometry(0.95, d.upperH * 0.92, d.width - 0.08, 4, 0.08), quarterMat, {
     x: -0.55,
     y: deckY + d.upperH * 0.46,
   });
-  group.add(quarter);
+  inner.add(quarter);
 
   const mud = mesh(new RoundedBoxGeometry(d.length - 0.2, 0.12, d.width - 0.02, 3, 0.06), overlayMat, {
     y: deckY + 0.04,
   });
-  group.add(mud);
+  inner.add(mud);
 
   const collarY = deckY + d.upperH + (d.high ? 0.02 : -0.02);
   const collar = mesh(new RoundedBoxGeometry(0.95, d.collarH, d.width - 0.12, 4, 0.14), collarMat, {
     x: -0.58,
     y: collarY + d.collarH / 2 - 0.08,
   });
-  group.add(collar);
+  inner.add(collar);
 
   const opening = mesh(new RoundedBoxGeometry(0.72, 0.08, d.width - 0.28, 3, 0.04), liningMat, {
     x: -0.42,
     y: collarY + d.collarH * 0.45,
     cast: false,
   });
-  group.add(opening);
+  inner.add(opening);
 
   const tongueH = d.high ? 0.72 : 0.52;
   const tongue = mesh(new RoundedBoxGeometry(0.95, 0.08, 0.42, 3, 0.04), tongueMat, {
@@ -264,19 +266,19 @@ export function buildSneaker(shoe, colorway) {
     y: deckY + tongueH * 0.55,
     rx: -0.72,
   });
-  group.add(tongue);
+  inner.add(tongue);
 
   const heelTab = mesh(new RoundedBoxGeometry(0.12, 0.22, 0.28, 2, 0.03), overlayMat, {
     x: -1.12,
     y: collarY + 0.12,
   });
-  group.add(heelTab);
+  inner.add(heelTab);
 
-  addSwooshes(group, palette, shoe.silhouette === "blazer" ? 1.05 : 0.92, deckY + d.upperH * 0.42, d.width * 0.46);
-  addLaces(group, palette, d.high ? 6 : 5, -0.18, deckY + d.upperH * 0.78, 0.34);
+  addSwooshes(inner, palette, shoe.silhouette === "blazer" ? 1.05 : 0.92, deckY + d.upperH * 0.42, d.width * 0.46);
+  addLaces(inner, palette, d.high ? 6 : 5, -0.18, deckY + d.upperH * 0.78, 0.34);
 
   if (shoe.silhouette === "max90" || shoe.silhouette === "max1") {
-    addWaffle(group, palette, 0.02);
+    addWaffle(inner, palette, 0.02);
   }
 
   if (shoe.silhouette === "jordan") {
@@ -288,34 +290,23 @@ export function buildSneaker(shoe, colorway) {
     });
     const wing2 = wing.clone();
     wing2.position.z = -d.width * 0.42;
-    group.add(wing, wing2);
+    inner.add(wing, wing2);
   }
 
-  group.traverse((child) => {
-    if (child.isMesh) {
-      child.userData.part = true;
-    }
-  });
-
-  group.rotation.y = 0.72;
-  group.rotation.x = -0.12;
-  group.rotation.z = 0.04;
-  group.updateWorldMatrix(true, true);
-  const box = new THREE.Box3().setFromObject(group);
+  inner.updateWorldMatrix(true, true);
+  const box = new THREE.Box3().setFromObject(inner);
   const size = new THREE.Vector3();
   box.getSize(size);
   const maxDim = Math.max(size.x, size.y, size.z) || 1;
-  group.scale.setScalar(2.05 / maxDim);
-  group.updateWorldMatrix(true, true);
-  const fitted = new THREE.Box3().setFromObject(group);
+  inner.scale.setScalar(1.65 / maxDim);
+  inner.updateWorldMatrix(true, true);
+  const fitted = new THREE.Box3().setFromObject(inner);
   const center = new THREE.Vector3();
   fitted.getCenter(center);
-  group.position.set(
-    group.position.x - center.x,
-    group.position.y - fitted.min.y + 0.02,
-    group.position.z - center.z,
-  );
-  group.userData.floatY = group.position.y;
+  inner.position.set(-center.x, -fitted.min.y, -center.z);
+
+  group.rotation.set(-0.18, 0.62, 0.06);
+  group.userData.floatY = 0;
   return group;
 }
 

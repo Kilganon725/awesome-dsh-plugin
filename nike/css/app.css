@@ -340,6 +340,7 @@ a {
 }
 
 .stage-wrap {
+  order: -1;
   position: relative;
   isolation: isolate;
   min-height: 58vh;
@@ -656,6 +657,10 @@ a {
     align-items: center;
     min-height: calc(100dvh - 72px);
     padding-top: 0.5rem;
+  }
+
+  .stage-wrap {
+    order: 0;
   }
 
   .mobile-nav,
