@@ -153,36 +153,15 @@ export function initMotion() {
   return { reduced: false, mm, playIntro, swapShoe };
 }
 
-function instantSwap({ previous, incoming }, viewer) {
-  incoming.scale.setScalar(1);
-  viewer.clearPrevious(previous);
-}
+function instantSwap() {}
 
-export function swapShoe({ previous, incoming }, viewer, reduced) {
-  if (reduced) {
-    instantSwap({ previous, incoming }, viewer);
-    return;
-  }
-
-  const tl = gsap.timeline({ defaults: { ease: "expo.inOut" } });
-  if (previous) {
-    tl.to(previous.rotation, { y: previous.rotation.y + Math.PI, duration: 0.45, ease: "power2.in" }, 0);
-    tl.to(previous.scale, { x: 0.001, y: 0.001, z: 0.001, duration: 0.35, ease: "power2.in" }, 0);
-  }
-  tl.add(() => viewer.clearPrevious(previous));
-  tl.fromTo(
-    incoming.scale,
-    { x: 0.001, y: 0.001, z: 0.001 },
-    { x: 1, y: 1, z: 1, duration: 0.55, ease: "expo.out" },
-    previous ? "-=0.05" : 0,
+export function swapShoe(stageEl, reduced) {
+  if (reduced || typeof gsap === "undefined" || !stageEl) return;
+  gsap.fromTo(
+    stageEl,
+    { autoAlpha: 0.35, scale: 0.96 },
+    { autoAlpha: 1, scale: 1, duration: 0.55, ease: "expo.out" },
   );
-  tl.fromTo(
-    incoming.rotation,
-    { y: incoming.rotation.y - Math.PI / 2 },
-    { y: incoming.rotation.y, duration: 0.7, ease: "expo.out" },
-    "<",
-  );
-  return tl;
 }
 
 export function bindMagnetic(el) {

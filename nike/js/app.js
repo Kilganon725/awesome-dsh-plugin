@@ -27,6 +27,8 @@ function renderMeta() {
   $("#shoe-price").textContent = shoe.price;
   $("#shoe-category").textContent = shoe.category;
   $("#shoe-blurb").textContent = shoe.blurb;
+  const source = $("#shoe-source");
+  if (source) source.textContent = shoe.source || "实拍";
   const facts = $("#shoe-facts");
   facts.replaceChildren(
     ...shoe.facts.map((fact) => {
@@ -76,7 +78,7 @@ function renderCollection() {
       card.dataset.shoeId = shoe.id;
       card.setAttribute("aria-pressed", String(index === state.shoeIndex));
       card.innerHTML = `
-        <span class="shoe-card__swatch" aria-hidden="true" style="--swatch:${shoe.colorways[0].swatch}"></span>
+        <span class="shoe-card__swatch" aria-hidden="true" style="background-image:url('${shoe.colorways[0].frames[0]}')"></span>
         <span class="shoe-card__meta">
           <span class="shoe-card__name">${shoe.name}</span>
           <span class="shoe-card__sub">${shoe.colorway} · ${shoe.year}</span>
@@ -105,17 +107,16 @@ function renderDots() {
 }
 
 function applyModel(viewer, motion, { instant = false } = {}) {
+  const shoe = currentShoe();
+  const color = currentColorway();
   renderMeta();
   renderDots();
-  const result = viewer.setModel(currentShoe(), currentColorway(), { instant });
-  if (instant || motion.reduced) {
-    result.incoming.scale.setScalar(1);
-    viewer.clearPrevious(result.previous);
-  } else {
-    swapShoe(result, viewer, motion.reduced);
+  const label = `${shoe.name} ${color.label} 实拍环视`;
+  viewer.setColorway(color, { instant, label });
+  if (!instant) {
+    swapShoe(viewer.stageEl, motion.reduced);
     flashAccent();
   }
-  viewer.resetView();
 }
 
 function selectShoe(index) {
@@ -139,10 +140,10 @@ function stepShoe(delta) {
 function bindControls(viewer) {
   $("#btn-prev").addEventListener("click", () => stepShoe(-1));
   $("#btn-next").addEventListener("click", () => stepShoe(1));
-  $("#btn-left").addEventListener("click", () => viewer.nudge(-0.28, 0));
-  $("#btn-right").addEventListener("click", () => viewer.nudge(0.28, 0));
-  $("#btn-up").addEventListener("click", () => viewer.nudge(0, -0.16));
-  $("#btn-down").addEventListener("click", () => viewer.nudge(0, 0.16));
+  $("#btn-left").addEventListener("click", () => viewer.nudge(-1));
+  $("#btn-right").addEventListener("click", () => viewer.nudge(1));
+  $("#btn-up").addEventListener("click", () => viewer.dolly(0.12));
+  $("#btn-down").addEventListener("click", () => viewer.dolly(-0.12));
   $("#btn-reset").addEventListener("click", () => viewer.resetView());
   const spin = $("#btn-spin");
   spin.setAttribute("aria-pressed", String(viewer.autoRotate));
@@ -236,14 +237,9 @@ function start() {
 
   if (!motion.reduced) {
     motion.playIntro();
-    window.setTimeout(() => viewer.resize(), 1200);
   } else {
     const intro = $("[data-intro]");
     if (intro) intro.hidden = true;
-  }
-
-  if (!window.WebGLRenderingContext) {
-    stage.innerHTML = "<p class='fallback'>当前浏览器无法显示 3D 展台，请换用支持 WebGL 的浏览器。</p>";
   }
 }
 
